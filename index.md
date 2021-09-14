@@ -17,9 +17,10 @@ pour grandir dans la foi. \
 Les frères chrétiens
 
 ## Abréviations ya mena a mikanda
+[Abréviations](abreviations_lexique_tshiluba_francais.html)
 
 ## Lexique
-Cliquer sur le lien ci-dessous
+Cliquer sur le lien ci-dessous \
 [lexique](LexiqueTshiluba_portableV5.html)
 
 ## Mode d'emploi
