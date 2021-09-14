@@ -1,37 +1,35 @@
-## Welcome to GitHub Pages
+# Lexique biblique français tshiluba
 
 You can use the [editor on GitHub](https://github.com/gitjo7265/index_french_tshiluba/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
+## Préface
+Ce lexique référence une grande partie des mots du Nouveau Testament et leurs
+significations en Français et en Tshiluba. Des références bibliques permettent
+d’illustrer par un exemple de la Parole les termes de ce lexique.
+Le but de cet ouvrage est d’aider le lecteur à sonder les Ecritures, car ce sont elles
+qui rendent témoignage de notre bien-aimé Seigneur Jésus Christ.
+Pour sa réalisation, le Seigneur a permis que plusieurs frères et sœurs du Congo,
+de France et de Suisse y travaillent avec persévérance durant plusieurs années.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+La plupart dessignifications de ce lexique sont empruntées au dictionnaire du Nou-
+veau Testament écrit par le frère E. Richard Pigeon (Canada), avec son autorisation.
 
-```markdown
-Syntax highlighted code block
+Nous demandons au Seigneur d’aider tous ceux qui se serviront de cet ouvrage
+pour grandir dans la foi.
+Les frères chrétiens
 
-# Header 1
-## Header 2
-### Header 3
+## Abréviations ya mena a mikanda
 
-- Bulleted
-- List
+## Lien
 
-1. Numbered
-2. List
+## Mode d'emploi
 
-**Bold** and _Italic_ and `Code` text
+## Utilisation sur téléphone portable
 
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
 
 Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/gitjo7265/index_french_tshiluba/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
 
-### Support or Contact
+### Support ou contact
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
