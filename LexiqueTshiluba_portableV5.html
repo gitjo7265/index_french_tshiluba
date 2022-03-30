@@ -39,7 +39,7 @@ body {
   overflow:hidden;
   text-decoration:none;
   color:inherit;
-  background-color:#090;
+  background-color:#006FB4;
   color:#fff;
   text-align:center;
   cursor:pointer;
@@ -120,32 +120,6 @@ p {
     background-color: white;
 }
 
-.digits  {
-  padding: 20px;
-  text-align: center;
-  font-family: monaco, monospace;
-  background-size: cover;
-  background: #f12;
-  font-size: 50px;
-  color: #fff;
-  font-weight: bold;
-}
-.headdigits  {
-  padding: 20px;
-  text-align: center;
-  font-family: monaco, monospace;
-  background-size: cover;
-  background: #fff;
-  font-size: 50px;
-  color: #000;
-  font-weight: bold;
-}
-
-
-.tddigits {
-  padding: 40px;
-}
-
 
 #searchResults {
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -167,11 +141,11 @@ p {
   padding-bottom: 12px;
   padding-left: 8px;
   text-align: left;
-  background-color: #4CAF50;
+  background-color: #006FB4;
   color: white;
   word-wrap: break-word;
   table-layout: fixed;
-  width: 200px;
+  width: 600px;
 }
 
 /* make the icon show only on smartphone edition */
@@ -180,6 +154,11 @@ p {
 }
 /* make the icon show only on smartphone edition */
 
+@media only screen and (max-width: 600px) {
+  body {
+    background-color: lightblue;
+  }
+}
 
 /* mobile disp fix */
 @media only screen and (max-width: 600px) {
@@ -257,14 +236,11 @@ p {
 .highlight {
   background-color: yellow;
 }</style>
-   
-
- 
  </head>
 
   <body onload="onLoadActions();">
 <script>
-var title = "Lexique Français - Tshiluba";
+var title = "Lexique biblique Français - Tshiluba";
 
 var timestamp = "Mon Mar  1 17:56:44 2021";
 
@@ -3737,16 +3713,19 @@ function onLoadActions(){
   document.getElementById("titleH1").innerHTML = title;
   
   document.getElementById("sc1").innerHTML = searchCriterias[0];
+  document.getElementById("sc2").innerHTML = searchCriterias[1];
 
   search();
+  
 }
 
 
 function search(){
   var x = document.getElementById("fSearchCriteria1");
+  var y = document.getElementById("fSearchCriteria2");
   
-  if ((x.value.length > 2)) {    
-    document.getElementById("recfound").innerHTML = "Patientez";
+  // will always search
+  if ((x.value.length > -1) || (y.value.length > -1)) {
     searchRequest();
   } else {
     // erase request
@@ -3759,6 +3738,9 @@ function search(){
 function resetRequest() {
   var x = document.getElementById("fSearchCriteria1");
   x.value = "";
+  x = document.getElementById("fSearchCriteria2");
+  x.value = "";
+  
 
   var el = document.getElementById('searchResults');
   if (el !== null) el.remove();
@@ -3766,17 +3748,10 @@ function resetRequest() {
   document.getElementById("recfound").innerHTML = "";
 }
 
-function displayAll() {
-  var x = document.getElementById("fSearchCriteria1");
-  x.value = "";
-
-  document.getElementById("recfound").innerHTML = "Patientez";
-  searchRequest();
-}
-
 function getCleanText(some_text) {
     var clean_text = some_text.toLowerCase();
-    clean_text = clean_text.replace(/[éèê]/g, "e"); 
+    clean_text = clean_text.replace(/[éè]/g, "e"); 
+    // clean_text = clean_text.split("é").join("e"); // give it another try
 
     return clean_text;
 }
@@ -3787,18 +3762,21 @@ function searchRequest() {
   var x = document.getElementById("fSearchCriteria1");
   var SearchCriteria1 = x.value;
   
-  // console.log("starting req");
+  var y = document.getElementById("fSearchCriteria2");
+  var SearchCriteria2 = y.value;
+  
+
+  console.log("starting req");
   var t0 = performance.now();
-  var t1;
+  var t1 = performance.now()
+  console.log("took " + (t1 - t0) + " milliseconds.");
   
   filteredList = listToParse;
  
   if (SearchCriteria1.length > 0) {
     filteredList = filteredList.reduce(function (filteredList, fullList) {
     // console.log(SearchCriteria1);
-    if (getCleanText(fullList.EntreeFR).includes(getCleanText(SearchCriteria1)) ||
-    getCleanText(fullList.EntreeTshi).includes(getCleanText(SearchCriteria1))  ) {
-      // console.log(SearchCriteria1);
+    if (getCleanText(fullList.MotFR).includes(getCleanText(SearchCriteria1))) {
       return filteredList.concat(fullList);
     } else {
       return filteredList;
@@ -3806,20 +3784,31 @@ function searchRequest() {
   }, []);
   }
 
-  t1 = performance.now();
-  //console.log("SearchCriteria1 took " + (t1 - t0) + " milliseconds.");
+  t1 = performance.now()
+  console.log("SearchCriteria1 took " + (t1 - t0) + " milliseconds.");
+  
+  if (SearchCriteria2.length > 0) {
+    filteredList = filteredList.reduce(function (filteredList, fullList) {
+    if (fullList.MotTshi.toLowerCase().includes(SearchCriteria2.toLowerCase())) {
+      return filteredList.concat(fullList);
+    } else {
+      return filteredList;
+    }
+  }, []);
+  }
+
+  t1 = performance.now()
+  console.log("SearchCriteria2 took " + (t1 - t0) + " milliseconds.");
+  // console.log("SearchCriteria2 is " + SearchCriteria2);
   
   displayResultTable();
   
-  t1 = performance.now();
-  //console.log("displayResultTable took " + (t1 - t0) + " milliseconds.");
+  t1 = performance.now()
+  console.log("displayResultTable took " + (t1 - t0) + " milliseconds.");
 }
 
 function displayResultTable() {
-  
-  var x = document.getElementById("fSearchCriteria1");
-  var SearchCriteria1 = x.value;
-  
+
   var el = document.getElementById('searchResults');
   if (el !== null) el.remove(); 
 
@@ -3830,6 +3819,11 @@ function displayResultTable() {
   x.setAttribute("id", "searchResults");
   document.body.appendChild(x);
 
+
+  //-------------------------------------------------------
+
+  // //split up display to output each item in array in its own box    
+  //     // https://stackoverflow.com/questions/9329446/for-each-over-an-array-in-javascript
   var index, len;
  
     var y = document.createElement("TR");
@@ -3862,37 +3856,13 @@ function displayResultTable() {
       }
       var t = document.createElement("TD");
       str = str.replace(/<p>/g, "\n"); 
-      str = str.replace(/&quot;/g, '"');
-      
-      // getCleanText(SearchCriteria1)
-      
-      var AllWordsToHighlight = [];
-
-      if (SearchCriteria1.length > 0) {
-        const matches = getCleanText(str).matchAll(getCleanText(SearchCriteria1));
-        for (const match of matches) {
-          var exactWordToHighlight = str.substring(match.index, match.index + SearchCriteria1.length);
-          AllWordsToHighlight.push(exactWordToHighlight); 
-        }
-      }
-  
-      if (SearchCriteria1.length > 0) {
-        const matches2 = getCleanText(str).matchAll(getCleanText(SearchCriteria1));
-        for (const match2 of matches2) {
-          exactWordToHighlight = str.substring(match2.index, match2.index + SearchCriteria1.length);
-          AllWordsToHighlight.push(exactWordToHighlight); 
-        }
-      }
- 
-      for (var i = 0; i < AllWordsToHighlight.length ; i++) {
-        var replace = AllWordsToHighlight[i];
-        var re = new RegExp(replace,"g");
-        str  = str.replace(re, "<span class=\"highlight\">" + AllWordsToHighlight[i] + "</span>");
-      }
-      t.innerHTML = str;
+      str = str.replace(/&quot;/g, '"'); 
+      t.appendChild(document.createTextNode(str));
       y.appendChild(t);
     }
   }
+  
+  
   document.getElementById("recfound").innerHTML = "Enregistrements trouvés: " + filteredList.length;
 
 }
@@ -3925,12 +3895,13 @@ function clickInput() {
 <!-- added onClick event  -->
 
 <!-- button-styles fix -->
-<TD style="margin-top: 13px;"> 
+<TD><div style="display: flex; justify-content: center;">
   <button type="button" class="w3-btn" onclick="resetRequest();">Effacer</button>
   <button type="button" class="w3-btn" onclick="displayAll();">Tout afficher</button>
     <button id="keyBtn" class="key-btn" style="height:36.8px;" onclick="clickInput();">
     <img  src="data:image/jpg;base64, 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">
   </button>
+     </div>     
   </TD>
   </TR>
 <!-- button-styles fix -->
