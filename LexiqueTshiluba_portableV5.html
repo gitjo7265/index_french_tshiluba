@@ -242,7 +242,7 @@ p {
 <script>
 var title = "Lexique biblique Français - Tshiluba";
 
-var timestamp = "Mon Mar  1 17:56:44 2021";
+var timestamp = "Mon Mar  1 18:56:44 2021";
 
 var tableHeader = ["Mot et signification français", "Mot et signification Tshiluba"];
 
@@ -3713,19 +3713,16 @@ function onLoadActions(){
   document.getElementById("titleH1").innerHTML = title;
   
   document.getElementById("sc1").innerHTML = searchCriterias[0];
-  document.getElementById("sc2").innerHTML = searchCriterias[1];
 
   search();
-  
 }
 
 
 function search(){
   var x = document.getElementById("fSearchCriteria1");
-  var y = document.getElementById("fSearchCriteria2");
   
-  // will always search
-  if ((x.value.length > -1) || (y.value.length > -1)) {
+  if ((x.value.length > 2)) {    
+    document.getElementById("recfound").innerHTML = "Patientez";
     searchRequest();
   } else {
     // erase request
@@ -3738,9 +3735,6 @@ function search(){
 function resetRequest() {
   var x = document.getElementById("fSearchCriteria1");
   x.value = "";
-  x = document.getElementById("fSearchCriteria2");
-  x.value = "";
-  
 
   var el = document.getElementById('searchResults');
   if (el !== null) el.remove();
@@ -3748,10 +3742,17 @@ function resetRequest() {
   document.getElementById("recfound").innerHTML = "";
 }
 
+function displayAll() {
+  var x = document.getElementById("fSearchCriteria1");
+  x.value = "";
+
+  document.getElementById("recfound").innerHTML = "Patientez";
+  searchRequest();
+}
+
 function getCleanText(some_text) {
     var clean_text = some_text.toLowerCase();
-    clean_text = clean_text.replace(/[éè]/g, "e"); 
-    // clean_text = clean_text.split("é").join("e"); // give it another try
+    clean_text = clean_text.replace(/[éèê]/g, "e"); 
 
     return clean_text;
 }
@@ -3762,21 +3763,18 @@ function searchRequest() {
   var x = document.getElementById("fSearchCriteria1");
   var SearchCriteria1 = x.value;
   
-  var y = document.getElementById("fSearchCriteria2");
-  var SearchCriteria2 = y.value;
-  
-
-  console.log("starting req");
+  // console.log("starting req");
   var t0 = performance.now();
-  var t1 = performance.now()
-  console.log("took " + (t1 - t0) + " milliseconds.");
+  var t1;
   
   filteredList = listToParse;
  
   if (SearchCriteria1.length > 0) {
     filteredList = filteredList.reduce(function (filteredList, fullList) {
     // console.log(SearchCriteria1);
-    if (getCleanText(fullList.MotFR).includes(getCleanText(SearchCriteria1))) {
+    if (getCleanText(fullList.EntreeFR).includes(getCleanText(SearchCriteria1)) ||
+    getCleanText(fullList.EntreeTshi).includes(getCleanText(SearchCriteria1))  ) {
+      // console.log(SearchCriteria1);
       return filteredList.concat(fullList);
     } else {
       return filteredList;
@@ -3784,31 +3782,20 @@ function searchRequest() {
   }, []);
   }
 
-  t1 = performance.now()
-  console.log("SearchCriteria1 took " + (t1 - t0) + " milliseconds.");
-  
-  if (SearchCriteria2.length > 0) {
-    filteredList = filteredList.reduce(function (filteredList, fullList) {
-    if (fullList.MotTshi.toLowerCase().includes(SearchCriteria2.toLowerCase())) {
-      return filteredList.concat(fullList);
-    } else {
-      return filteredList;
-    }
-  }, []);
-  }
-
-  t1 = performance.now()
-  console.log("SearchCriteria2 took " + (t1 - t0) + " milliseconds.");
-  // console.log("SearchCriteria2 is " + SearchCriteria2);
+  t1 = performance.now();
+  //console.log("SearchCriteria1 took " + (t1 - t0) + " milliseconds.");
   
   displayResultTable();
   
-  t1 = performance.now()
-  console.log("displayResultTable took " + (t1 - t0) + " milliseconds.");
+  t1 = performance.now();
+  //console.log("displayResultTable took " + (t1 - t0) + " milliseconds.");
 }
 
 function displayResultTable() {
-
+  
+  var x = document.getElementById("fSearchCriteria1");
+  var SearchCriteria1 = x.value;
+  
   var el = document.getElementById('searchResults');
   if (el !== null) el.remove(); 
 
@@ -3819,11 +3806,6 @@ function displayResultTable() {
   x.setAttribute("id", "searchResults");
   document.body.appendChild(x);
 
-
-  //-------------------------------------------------------
-
-  // //split up display to output each item in array in its own box    
-  //     // https://stackoverflow.com/questions/9329446/for-each-over-an-array-in-javascript
   var index, len;
  
     var y = document.createElement("TR");
@@ -3856,13 +3838,37 @@ function displayResultTable() {
       }
       var t = document.createElement("TD");
       str = str.replace(/<p>/g, "\n"); 
-      str = str.replace(/&quot;/g, '"'); 
-      t.appendChild(document.createTextNode(str));
+      str = str.replace(/&quot;/g, '"');
+      
+      // getCleanText(SearchCriteria1)
+      
+      var AllWordsToHighlight = [];
+
+      if (SearchCriteria1.length > 0) {
+        const matches = getCleanText(str).matchAll(getCleanText(SearchCriteria1));
+        for (const match of matches) {
+          var exactWordToHighlight = str.substring(match.index, match.index + SearchCriteria1.length);
+          AllWordsToHighlight.push(exactWordToHighlight); 
+        }
+      }
+  
+      if (SearchCriteria1.length > 0) {
+        const matches2 = getCleanText(str).matchAll(getCleanText(SearchCriteria1));
+        for (const match2 of matches2) {
+          exactWordToHighlight = str.substring(match2.index, match2.index + SearchCriteria1.length);
+          AllWordsToHighlight.push(exactWordToHighlight); 
+        }
+      }
+ 
+      for (var i = 0; i < AllWordsToHighlight.length ; i++) {
+        var replace = AllWordsToHighlight[i];
+        var re = new RegExp(replace,"g");
+        str  = str.replace(re, "<span class=\"highlight\">" + AllWordsToHighlight[i] + "</span>");
+      }
+      t.innerHTML = str;
       y.appendChild(t);
     }
   }
-  
-  
   document.getElementById("recfound").innerHTML = "Enregistrements trouvés: " + filteredList.length;
 
 }
